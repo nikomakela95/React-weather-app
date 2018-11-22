@@ -1,3 +1,8 @@
+## React weather app
+
+This is a simple weather application where user can find current weather of any city. 
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
