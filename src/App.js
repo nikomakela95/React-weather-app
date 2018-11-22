@@ -24,7 +24,7 @@ class App extends React.Component {
     e.preventDefault();
     const country = e.target.elements.country.value;
     const city = e.target.elements.city.value;
-    const get_data = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
+    const get_data = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}&units=metric`);
     const data = await get_data.json();
     console.log(data);
 
@@ -59,7 +59,7 @@ class App extends React.Component {
         this.setState({
           city: data.name,
           country: data.sys.country,
-          icon: "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png",
+          icon: "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png",
           temperature: data.main.temp,
           description: data.weather[0].description,
           wind: data.wind.speed,
