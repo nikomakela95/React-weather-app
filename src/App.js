@@ -12,9 +12,11 @@ class App extends React.Component {
   state = {
     city: undefined,
     country: undefined,
+    icon: undefined,
     temperature: undefined,
     description: undefined,
-    wind: undefined
+    wind: undefined,
+    errorMessage: undefined
   }
 
   //Method for getting weather data
@@ -26,42 +28,64 @@ class App extends React.Component {
     const data = await get_data.json();
     console.log(data);
 
-  // If country and city is placed on the form, display weather data
-    if (country && city) {
-      this.setState({
-        city: data.name,
-        country: data.sys.country,
-        temperature: data.main.temp,
-        description: data.weather[0].description,
-        wind: data.wind.speed
-      });
-    }
-    // If form is missing country or city, don't show weather data
-    else {
+
+  // If country or city is missing, give error message
+    if (!country || !city) {
       this.setState({
         city: undefined,
         country: undefined,
+        icon: undefined,
         temperature: undefined,
         description: undefined,
-        wind: undefined
+        wind: undefined,
+        errorMessage: "Please fill in both inputs."
       });
     }
+
+    // If can't find weather data, give error message
+    else if (data.cod === "404") {
+      this.setState({
+        city: undefined,
+        country: undefined,
+        icon: undefined,
+        temperature: undefined,
+        description: undefined,
+        wind: undefined,
+        errorMessage: "Couldn't find any weather data. Check your spelling."
+      });
+    }
+    // If no errors, display weather data
+    else {
+        this.setState({
+          city: data.name,
+          country: data.sys.country,
+          icon: "http://openweathermap.org/img/w/" + data.weather[0].icon + ".png",
+          temperature: data.main.temp,
+          description: data.weather[0].description,
+          wind: data.wind.speed,
+          errorMessage: ""
+        });
+      }
   }
   render() {
     return (
       <div className="wrapper">
-        <div className="container">
-
-        <p>Current temperature</p>
-        <Titles />
-        <UserInputsForm getWeatherData = {this.getWeatherData}/>
-        <ApiData
-          city = { this.state.city }
-          country = { this.state.country }
-          temperature = { this.state.temperature }
-          description = { this.state.description}
-          wind = { this.state.wind }
-          />
+          <div className="container">
+            <div className="title-area">
+              <Titles />
+            </div>
+            <div className="form-area">
+              <UserInputsForm getWeatherData = {this.getWeatherData}/>
+              <ApiData
+                icon = { this.state.icon }
+                city = { this.state.city }
+                country = { this.state.country }
+                temperature = { this.state.temperature }
+                description = { this.state.description}
+                wind = { this.state.wind }
+                errorMessage = {this.state.errorMessage}
+                />
+            </div>
         </div>
       </div>
     );
